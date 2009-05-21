@@ -864,8 +864,8 @@ void Spell::prepareDataForTriggerSystem()
             case SPELLFAMILY_WARLOCK: // For Hellfire Effect / Rain of Fire / Seed of Corruption triggers need do it
                 if (m_spellInfo->SpellFamilyFlags & 0x0000800000000060LL) m_canTrigger = true;
             break;
-            case SPELLFAMILY_PRIEST:  // For Penance heal/damage triggers need do it
-                if (m_spellInfo->SpellFamilyFlags & 0x0001800000000000LL) m_canTrigger = true;
+            case SPELLFAMILY_PRIEST:  // For Penance,Mind Sear,Mind Flay heal/damage triggers need do it
+                if (m_spellInfo->SpellFamilyFlags & 0x0009800000800000LL) m_canTrigger = true;
             break;
             case SPELLFAMILY_ROGUE:   // For poisons need do it
                 if (m_spellInfo->SpellFamilyFlags & 0x000000101001E000LL) m_canTrigger = true;

@@ -3965,8 +3965,12 @@ SpellCastResult Spell::CheckCast(bool strict)
             //Exclusion for Pounce: Facing Limitation was removed in 2.0.1, but it still uses the same, old Ex-Flags
             if( m_spellInfo->SpellFamilyName != SPELLFAMILY_DRUID || m_spellInfo->SpellFamilyFlags != 0x0000000000020000LL )
             {
-                SendInterrupted(2);
-                return SPELL_FAILED_NOT_BEHIND;
+                //Exclusion for Multilate: Facing Limitation was removed in 3.0.2, but it still uses the same, old Ex-Flags
+                if (m_spellInfo->SpellFamilyFlags != 0x000020000000000000LL)
+                {
+                    SendInterrupted(2);
+                    return SPELL_FAILED_NOT_BEHIND;
+                }
             }
         }
 

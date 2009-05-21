@@ -5517,7 +5517,10 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
                 case 20186:
                 {
                     if (pVictim->getPowerType() == POWER_MANA)
-                        pVictim->CastSpell(pVictim, 20268, true, 0, triggeredByAura);
+                    {
+                        int32 bp = 2*(pVictim->GetCreateMana() / 100);
+                        pVictim->CastCustomSpell(pVictim, 20268, &bp, 0, 0, true, 0, triggeredByAura);
+                    }
                     return true;
                 }
                 // Holy Power (Redemption Armor set)
@@ -5558,6 +5561,15 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
                         return false;
 
                     triggered_spell_id = 31803;
+                    break;
+                }
+                // Seal of Corruption
+                case 53736:
+                {
+                    if(effIndex != 0)
+                        return false;
+
+                    triggered_spell_id = 53742;
                     break;
                 }
                 // Spiritual Attunement

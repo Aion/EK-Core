@@ -5171,6 +5171,15 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                     }
                     return;
                 }
+                // Divine Hymn
+                case 47951:
+                {
+                if(!unitTarget)
+                return;
+                unitTarget->CastSpell(unitTarget,47953,true);
+                unitTarget->CastSpell(unitTarget,59600,true);
+                break;
+                }
                 default:
                     break;
             }

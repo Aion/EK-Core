@@ -1864,6 +1864,32 @@ void Spell::EffectDummy(uint32 i)
                 }
                 return;
             }
+            switch(m_spellInfo->Id)
+            {
+                // Death Grip
+                case 49560:
+                case 49576:
+                {
+                    if (!unitTarget || !m_caster)
+                        return;
+
+                    uint32 mapid = m_caster->GetMapId();
+                    float x = m_caster->GetPositionX();
+                    float y = m_caster->GetPositionY();
+                    float z = m_caster->GetPositionZ()+1;
+                    float orientation = unitTarget->GetOrientation();
+                
+                    unitTarget->SendMonsterMove(x, y, z, 0, MOVEMENTFLAG_JUMPING, 1);
+
+                    if(unitTarget->GetTypeId() != TYPEID_PLAYER)
+                        unitTarget->GetMap()->CreatureRelocation((Creature*)unitTarget,x,y,z,orientation);
+                    else
+                        unitTarget->NearTeleportTo(x,y,z,orientation,false);
+
+                    //m_caster->CastSpell(unitTarget,49575,true,NULL);
+                    return;
+                }
+            }
             break;
     }
 

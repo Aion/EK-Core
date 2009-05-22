@@ -1180,6 +1180,14 @@ bool SpellMgr::IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2) cons
                         (spellInfo_2->Id == 8326 && spellInfo_1->Id == 20584) )
                          return false;
 
+                    // Sextant of Unstable Currents and Band of the Eternal Sage
+                    if( spellInfo_1->SpellIconID == 502 && spellInfo_2->SpellIconID == 502 )
+                        return false;
+
+                    // Lightning Speed and Crushing Waves
+                    if( spellInfo_1->SpellIconID == 2010 && spellInfo_2->SpellIconID == 2010 )
+                        return false;
+
                     break;
                 }
                 case SPELLFAMILY_WARRIOR:
@@ -1286,6 +1294,9 @@ bool SpellMgr::IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2) cons
                 // (Corruption or Unstable Affliction) and (Curse of Agony or Curse of Doom)
                 if( (spellInfo_1->SpellIconID == 313 || spellInfo_1->SpellIconID == 2039) && (spellInfo_2->SpellIconID == 544  || spellInfo_2->SpellIconID == 91) ||
                     (spellInfo_2->SpellIconID == 313 || spellInfo_2->SpellIconID == 2039) && (spellInfo_1->SpellIconID == 544  || spellInfo_1->SpellIconID == 91) )
+                    return false;
+                // Nether Protection effects
+                if( spellInfo_2->SpellIconID==1985 && spellInfo_1->SpellIconID==1985 && spellInfo_1->SpellVisual[0]==9750 )
                     return false;
             }
             // Detect Invisibility and Mana Shield (multi-family check)

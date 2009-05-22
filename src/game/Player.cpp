@@ -6051,6 +6051,27 @@ void Player::UpdateArea(uint32 newArea)
     // so apply them accordingly
     m_areaUpdateId    = newArea;
 
+    //EK-Change Porte Spieler zurück zur Psy-City, sollten sie das Gebiet verlassen!
+    uint32 map = GetMapId();
+    uint32 zone = GetZoneId();
+
+    if(!isGameMaster() && map == 0 && zone == 139 && newArea !=2266) // Psy-City
+    {
+        if(!GetTransport()) // Nicht während eines Transports
+        {
+            ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
+            TeleportTo(m_homebindMapId, m_homebindX, m_homebindY, m_homebindZ, GetOrientation());
+        }
+    }
+	if(!isGameMaster() && map == 1 && zone == 1377 && newArea !=2477) // Psy-City
+    {
+        if(!GetTransport()) // Nicht während eines Transports
+        {
+            ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
+            TeleportTo(m_homebindMapId, m_homebindX, m_homebindY, m_homebindZ, GetOrientation());
+        }
+    }
+
     AreaTableEntry const* area = GetAreaEntryByAreaID(newArea);
 
     if(area && (area->flags & AREA_FLAG_ARENA))

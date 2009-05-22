@@ -2381,6 +2381,16 @@ void Aura::HandleAuraDummy(bool apply, bool Real)
                 ((Player*)m_target)->UpdateAttackPowerAndDamage();
                 return;
             }
+            // Savage Roar
+            if (GetId() == 52610 && m_target->GetTypeId()==TYPEID_PLAYER)
+            {
+                if (apply)
+                {
+                    m_target->CastSpell(m_target, 62071, true, NULL);
+                }
+                else
+                    m_target->RemoveAurasDueToSpell(62071);
+            }
             break;
         }
         case SPELLFAMILY_HUNTER:

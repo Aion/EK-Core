@@ -469,9 +469,6 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
 
         duel_hasEnded = true;
     }
-    // Prevent death of creature if it is unkillable
-    if(pVictim->GetTypeId() == TYPEID_UNIT && ((Creature*)pVictim)->isUnkillable() && damage >= (health-1))
-        damage = health-1;
     //Get in CombatState
     if(pVictim != this && damagetype != DOT)
     {

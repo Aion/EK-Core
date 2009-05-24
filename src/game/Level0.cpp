@@ -269,7 +269,7 @@ bool ChatHandler::HandleBugReportCommand(const char* args)
 
 	uint32 acc_id = m_session->GetAccountId();
 	//TODO: Automatic search for Realmname and put it into Database on bug report
-	uint32 realm = 1; // 1 = Lumion
+	uint32 realm = 2; // 2 = Psy
 
 	if(!*args)
     {

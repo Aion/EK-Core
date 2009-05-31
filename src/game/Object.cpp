@@ -657,6 +657,12 @@ void Object::_BuildValuesUpdate(uint8 updatetype, ByteBuffer * data, UpdateMask 
                             case GAMEOBJECT_TYPE_GOOBER:
                                 *data << uint32(1);
                                 break;
+                            case GAMEOBJECT_TYPE_DOOR:
+                                if (updatetype == UPDATETYPE_VALUES)
+                                    *data << uint32(0);        // No Flags
+                                else
+                                    *data << uint32(8388608);  // No Animation ( 0x00800000 )
+                                break;
                             default:
                                 *data << uint32(0);         // unknown, not happen.
                                 break;

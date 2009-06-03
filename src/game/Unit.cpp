@@ -5128,6 +5128,18 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
                 triggered_spell_id = 58691;
                 break;
             }
+			// Improved Drain Soul
+            if (dummySpell->SpellIconID == 113)
+            {
+                Unit *caster = triggeredByAura->GetCaster();
+
+                if (!caster)
+                    return false;
+
+                basepoints0 = caster->GetMaxPower(POWER_MANA)* triggerAmount / 100;
+                triggered_spell_id = 18371;
+                break;
+            }
             // Fel Synergy
             if (dummySpell->SpellIconID == 3222)
             {

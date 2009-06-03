@@ -1479,8 +1479,22 @@ bool SpellMgr::IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2) cons
                 //Blood Presence or Unholy Presence -> remove +10% max. health
                 if ((spellInfo_2->Id == 61261 && (spellInfo_1->Id == 48266 || spellInfo_1->Id == 48265)))
                     return true;
+                // Ebon Plague must replace Crypt Fever.
+                if ( (spellInfo_1->Attributes & 0x40000) && (spellInfo_1->AttributesEx & 0x8) &&
+                     (spellInfo_2->Attributes & 0x10) && (spellInfo_2->AttributesEx3 & 0x40000000) )
+                    return true;
+                // Higher rank Crypt Fever must replace lower.
+                if ( (spellInfo_1->Attributes & 0x10) && (spellInfo_1->AttributesEx3 & 0x40000000) &&
+                     (spellInfo_2->Attributes & 0x10) && (spellInfo_2->AttributesEx3 & 0x40000000) &&
+                     spellInfo_1->Id > spellInfo_2->Id )
+                    return true;
+                // Higher rank Ebon Plague must replace lower.
+                if ( (spellInfo_1->Attributes & 0x40000) && (spellInfo_1->AttributesEx & 0x8) &&
+                     (spellInfo_2->Attributes & 0x40000) && (spellInfo_2->AttributesEx & 0x8) &&
+                     spellInfo_1->Id > spellInfo_2->Id)
+                    return true;
             }
-            break;
+			break;
         default:
             break;
     }

@@ -928,7 +928,7 @@ GM.AllowAchievementGain  = 1
 #    Visibility.Distance.Grey.Unit
 #        Visibility grey distance for creatures/players (fast changing objects)
 #        addition to appropriate object type Visibility.Distance.* use in case visibility removing to
-#        object (except corpse around distences) If � is distance and G is grey distance then object
+#        object (except corpse around distences) If   is distance and G is grey distance then object
 #        make visible if distance to it <= D but make non visible if distance > D+G
 #        Default: 1 (yard)
 #
@@ -1324,6 +1324,31 @@ AuctionHouseBot.Bind_Quest_Item = 0
 AuctionHouseBot.ItemsPerCycle = 200
 AuctionHouseBot.UseBuyPriceForSeller = 0
 AuctionHouseBot.UseBuyPriceForBuyer = 0
+
+###################################################################################################################
+# MOVEMENT ANTICHEAT
+#
+#    Anticheat.Movement.Enable
+#        Enable Movement Anticheat
+#        Default: 1 - on
+#                 0 - off
+#
+#    Anticheat.Movement.TeleportToPlaneAlarms
+#        maximum alarms before player will be kicked (default 50, allowed 20 - 100)
+#
+#    Anticheat.Movement.MistimingDelta
+#        mistiming intelval between client and serverside (default 10000 ms, allowed 1000 - 15000 ms)
+#
+#    Anticheat.Movement.MistimingAlarms
+#        mistiming alarms before player will be kicked (default 20, allowed 10 - 50)
+#
+###################################################################################################################
+
+Anticheat.Movement.Enable = 1
+Anticheat.Movement.TeleportToPlaneAlarms = 50
+Anticheat.Movement.MistimingDelta = 10000
+Anticheat.Movement.MistimingAlarms = 20
+
 
 ###################################################################################################################
 # CONSOLE AND REMOTE ACCESS

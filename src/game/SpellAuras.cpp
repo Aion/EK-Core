@@ -2342,6 +2342,9 @@ void Aura::HandleAuraDummy(bool apply, bool Real)
                     ((Player*)m_target)->AddSpellMod(m_spellmod, apply);
                     return;
                 }
+                 case 48384: if (apply) m_target->CastSpell(m_target,50170,true); return;			//Rank 1
+                 case 48395: if (apply) m_target->CastSpell(m_target,50171,true); return;			//Rank 2
+                 case 48396: if (apply) m_target->CastSpell(m_target,50172,true); return;			//Rank 3
                 case 61336:                                 // Survival Instincts
                 {
                     if(apply)

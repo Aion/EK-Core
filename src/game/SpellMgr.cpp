@@ -314,6 +314,9 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
         case SPELL_EFFECT_ENERGIZE_PCT:
             return true;
 
+        // Charge casted on self to run - so must be positive
+        case SPELL_EFFECT_CHARGE:
+            return true;
             // non-positive aura use
         case SPELL_EFFECT_APPLY_AURA:
         case SPELL_EFFECT_APPLY_AREA_AURA_FRIEND:

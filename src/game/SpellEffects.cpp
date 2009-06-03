@@ -2232,6 +2232,9 @@ void Spell::EffectTriggerMissileSpell(uint32 effect_idx)
 
     if (m_CastItem)
         DEBUG_LOG("WORLD: cast Item spellId - %i", spellInfo->Id);
+    
+    if (m_caster->GetTypeId() == TYPEID_PLAYER)
+        ((Player*)m_caster)->RemoveSpellCooldown(triggered_spell_id);
 
     m_caster->CastSpell(m_targets.m_destX, m_targets.m_destY, m_targets.m_destZ, spellInfo, true, m_CastItem, 0, m_originalCasterGUID);
 }
@@ -5422,7 +5425,11 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                         //}
                     }
                     if (spellId)
+                    {
+                        if (m_caster->GetTypeId() == TYPEID_PLAYER)
+                            ((Player*)m_caster)->RemoveSpellCooldown(spellId);
                         m_caster->CastCustomSpell(unitTarget, spellId, &basePoint, 0, 0, false);
+                    }
                     return;
                 }
                 default:

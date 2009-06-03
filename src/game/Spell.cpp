@@ -637,6 +637,9 @@ void Spell::FillTargetMap()
                     case TARGET_SCRIPT_COORDINATES:         // B case filled in CheckCast but we need fill unit list base at A case
                         SetTargetMap(i, m_spellInfo->EffectImplicitTargetA[i], tmpUnitMap);
                         break;
+´                   case TARGET_AREAEFFECT_CUSTOM:
+                        // We MUST select custom target. May be some SetCustomTargetMap(i, tmpUnitMap)
+                        break;
                     default:
                         SetTargetMap(i, m_spellInfo->EffectImplicitTargetA[i], tmpUnitMap);
                         SetTargetMap(i, m_spellInfo->EffectImplicitTargetB[i], tmpUnitMap);
@@ -1489,6 +1492,7 @@ void Spell::SetTargetMap(uint32 i,uint32 cur,UnitList& TagUnitMap)
         case TARGET_DYNAMIC_OBJECT:
         case TARGET_AREAEFFECT_CUSTOM_2:
         case TARGET_SUMMON:
+        case TARGET_EFFECT_SELECT:
         {
             TagUnitMap.push_back(m_caster);
             break;
@@ -3951,7 +3955,9 @@ SpellCastResult Spell::CheckCast(bool strict)
         return SPELL_FAILED_CASTER_AURASTATE;
 
     // Caster aura req check if need
-    if(m_spellInfo->casterAuraSpell && !m_caster->HasAura(m_spellInfo->casterAuraSpell))
+    if(m_spellInfo->casterAuraSpell &&
+        sSpellStore.LookupEntry(m_spellInfo->casterAuraSpell) &&
+        !m_caster->HasAura(m_spellInfo->casterAuraSpell))
         return SPELL_FAILED_CASTER_AURASTATE;
     if(m_spellInfo->excludeCasterAuraSpell && m_caster->HasAura(m_spellInfo->excludeCasterAuraSpell))
         return SPELL_FAILED_CASTER_AURASTATE;

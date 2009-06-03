@@ -2441,8 +2441,8 @@ void Aura::HandleAuraDummy(bool apply, bool Real)
                     mod->value = m_modifier.m_amount;
                     mod->type = SPELLMOD_PCT;
                     mod->spellId = GetId();
-                    mod->mask = 0x0002LL;
-                    mod->mask2= 0LL;
+                    mod->mask = UI64LIT(0x0002);
+                    mod->mask2= UI64LIT(0x0);
 
                     m_spellmod = mod;
                 }

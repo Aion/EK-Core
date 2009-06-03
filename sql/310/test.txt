@@ -1,0 +1,9 @@
+alter table `item_template` add column `dmg_min3` float NOT NULL default '0';
+alter table `item_template` add column `dmg_max3` float NOT NULL default '0';
+alter table `item_template` add column `dmg_type3` tinyint(3) unsigned NOT NULL default '0';
+alter table `item_template` add column `dmg_min4` float NOT NULL default '0';
+alter table `item_template` add column `dmg_max4` float NOT NULL default '0';
+alter table `item_template` add column `dmg_type4` tinyint(3) unsigned NOT NULL default '0';
+alter table `item_template` add column `dmg_min5` float NOT NULL default '0';
+alter table `item_template` add column `dmg_max5` float NOT NULL default '0';
+alter table `item_template` add column `dmg_type5` tinyint(3) unsigned NOT NULL default '0';

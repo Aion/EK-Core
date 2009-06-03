@@ -637,7 +637,7 @@ void Spell::FillTargetMap()
                     case TARGET_SCRIPT_COORDINATES:         // B case filled in CheckCast but we need fill unit list base at A case
                         SetTargetMap(i, m_spellInfo->EffectImplicitTargetA[i], tmpUnitMap);
                         break;
-´                   case TARGET_AREAEFFECT_CUSTOM:
+                    case TARGET_AREAEFFECT_CUSTOM:
                         // We MUST select custom target. May be some SetCustomTargetMap(i, tmpUnitMap)
                         break;
                     default:

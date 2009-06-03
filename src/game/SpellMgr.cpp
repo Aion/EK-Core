@@ -948,7 +948,7 @@ bool SpellMgr::IsSpellProcEventCanTriggeredBy(SpellProcEventEntry const * spellP
         return false;
 
     // Always trigger for this
-    if (EventProcFlag & (PROC_FLAG_KILLED | PROC_FLAG_KILL | PROC_FLAG_ON_TRAP_ACTIVATION))
+    if (EventProcFlag & (PROC_FLAG_KILLED | PROC_FLAG_KILL | PROC_FLAG_ON_TRAP_ACTIVATION | PROC_FLAG_ON_DEATH))
         return true;
 
     if (spellProcEvent)     // Exist event data
@@ -1276,6 +1276,11 @@ bool SpellMgr::IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2) cons
             if( spellInfo_1->Id == 11129 && spellInfo_2->SpellIconID == 33 && spellInfo_2->SpellVisual[0] == 321 )
                 return false;
 
+            // Fire Ward and Fire Shield (multi-family check)
+            if ((spellInfo_1->SpellIconID == 16) && (spellInfo_1->SpellFamilyFlags & UI64LIT(0x0000000000000008)) &&
+                (spellInfo_2->SpellIconID == 16) && (spellInfo_2->SpellFamilyName == SPELLFAMILY_WARLOCK))
+                return false;
+
             break;
         case SPELLFAMILY_WARLOCK:
             if( spellInfo_2->SpellFamilyName == SPELLFAMILY_WARLOCK )
@@ -1307,6 +1312,12 @@ bool SpellMgr::IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2) cons
             // Detect Invisibility and Mana Shield (multi-family check)
             if( spellInfo_1->Id == 132 && spellInfo_2->SpellIconID == 209 && spellInfo_2->SpellVisual[0] == 968 )
                 return false;
+
+            // Fire Shield and Fire Ward (multi-family check)
+            if ((spellInfo_1->SpellIconID == 16) &&
+                (spellInfo_2->SpellIconID == 16) && (spellInfo_2->SpellFamilyFlags & UI64LIT(0x0000000000000008)))
+                return false;
+
             break;
         case SPELLFAMILY_WARRIOR:
             if( spellInfo_2->SpellFamilyName == SPELLFAMILY_WARRIOR )

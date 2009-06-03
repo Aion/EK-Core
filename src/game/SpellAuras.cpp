@@ -2027,6 +2027,12 @@ void Aura::TriggerSpell()
                 caster->CastCustomSpell(target, trigger_spell_id, &m_modifier.m_amount, NULL, NULL, true, NULL, this);
                 return;
             }
+            // Intense Cold
+            case 48094:
+            {
+                target->CastSpell(target, trigger_spell_id, true, NULL, this);
+                return;
+            }
         }
     }
 

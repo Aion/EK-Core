@@ -4589,6 +4589,25 @@ void Spell::EffectWeaponDmg(uint32 i)
         }
         case SPELLFAMILY_ROGUE:
         {
+            // Fan of knives
+            if (m_caster->GetTypeId()==TYPEID_PLAYER && (m_spellInfo->SpellFamilyFlags & UI64LIT(0x4000000000000)))
+            {
+                Item* mainWeapon = ((Player*)m_caster)->GetWeaponForAttack(BASE_ATTACK,true);
+                Item*  offWeapon = ((Player*)m_caster)->GetWeaponForAttack(OFF_ATTACK,true);
+
+                if(offWeapon)
+                {
+                    spell_bonus += m_caster->CalculateDamage (OFF_ATTACK, normalized);
+                    if ((mainWeapon && mainWeapon->GetProto()->SubClass == ITEM_SUBCLASS_WEAPON_DAGGER) &&
+                        (offWeapon && offWeapon->GetProto()->SubClass == ITEM_SUBCLASS_WEAPON_DAGGER))
+                        totalDamagePercentMod *= 1.5f;
+                }
+                else
+                {
+                    if (mainWeapon && mainWeapon->GetProto()->SubClass == ITEM_SUBCLASS_WEAPON_DAGGER)
+                        totalDamagePercentMod *= 1.5f;
+                }
+            }
             // Mutilate (for each hand)
             if(m_spellInfo->SpellFamilyFlags & UI64LIT(0x600000000))
             {

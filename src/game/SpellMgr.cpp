@@ -306,6 +306,15 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
         case 28441:                                         // not positive dummy spell
         case 37675:                                         // Chaos Blast
             return false;
+        case 47540:                                         // Penance start dummy aura - Rank 1
+        case 53005:                                         // Penance start dummy aura - Rank 2
+        case 53006:                                         // Penance start dummy aura - Rank 3
+        case 53007:                                         // Penance start dummy aura - Rank 4
+        case 47757:                                         // Penance heal effect trigger - Rank 1
+        case 52986:                                         // Penance heal effect trigger - Rank 2
+        case 52987:                                         // Penance heal effect trigger - Rank 3
+        case 52988:                                         // Penance heal effect trigger - Rank 4
+            return true;
     }
 
     switch(spellproto->Effect[effIndex])

@@ -5420,7 +5420,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
             // Deadly Brew
             if( dummySpell->SpellIconID == 2963 )
             {
-                triggered_spell_id = 25809;
+                triggered_spell_id = 44289;
                 break;
             }
             // Quick Recovery

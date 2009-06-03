@@ -5099,6 +5099,23 @@ void Aura::HandleAuraModRangedAttackPower(bool apply, bool /*Real*/)
     if((m_target->getClassMask() & CLASSMASK_WAND_USERS)!=0)
         return;
 
+    switch (m_spellProto->SpellFamilyName)
+    {
+        case SPELLFAMILY_HUNTER:
+            if (m_spellProto->SpellIconID == 2328)
+                if (apply)
+                {
+                    if (m_target->GetTypeId() == TYPEID_PLAYER)
+                        ((Player*)m_target)->RemoveSpellCooldown(61848);
+                    m_target->CastSpell(m_target,61848,true);
+                }
+                else
+                    m_target->RemoveAurasDueToSpell(61848);
+            break;
+        default:
+            break;
+    }
+
     m_target->HandleStatModifier(UNIT_MOD_ATTACK_POWER_RANGED, TOTAL_VALUE, float(m_modifier.m_amount), apply);
 }
 

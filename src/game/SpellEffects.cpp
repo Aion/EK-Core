@@ -2108,6 +2108,16 @@ void Spell::EffectTriggerSpell(uint32 i)
                 pet->CastSpell(pet, 28305, true);
             return;
         }
+        // Demonic Empowerment (Succubus)
+        case 54437:
+        {
+            m_caster->RemoveSpellsCausingAura(SPELL_AURA_MOD_ROOT);
+            m_caster->RemoveSpellsCausingAura(SPELL_AURA_MOD_DECREASE_SPEED);
+            m_caster->RemoveSpellsCausingAura(SPELL_AURA_MOD_STALKED);
+            m_caster->RemoveSpellsCausingAura(SPELL_AURA_MOD_STUN);
+            return;
+        }
+
     }
 
     // normal case
@@ -5223,6 +5233,42 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                            (*itr).second->GetCasterGUID()==m_caster->GetGUID())
                            (*itr).second->RefreshAura();
                     }
+                    return;
+                }
+                // Demonic Empowerment
+                case 47193:
+                {
+                    if(m_caster->GetTypeId() != TYPEID_PLAYER)
+                        return;
+
+                    Pet* pet = m_caster->GetPet();
+                    if(!pet)        // Return if no pet
+                        return;
+
+                    if(pet->getPetType() != SUMMON_PET || m_caster != pet->GetOwner())
+                        return;
+
+                    // Select appropriate spell based on creature family
+                    uint32 pSpellId = 0;
+                    int32 bp0 = 0;
+                    switch(pet->GetCreatureInfo()->family)
+                    {
+                        case CREATURE_FAMILY_FELHUNTER:     pSpellId = 54509; break;
+                        case CREATURE_FAMILY_SUCCUBUS:      pSpellId = 54435; break;
+                        case CREATURE_FAMILY_IMP:           pSpellId = 54444; break;
+                        case CREATURE_FAMILY_FELGUARD:      pSpellId = 54508; break;
+                        case CREATURE_FAMILY_VOIDWALKER:    // Needs BasePoints0 to be corrected
+                        {
+                            pSpellId = 54443; 
+                            if(SpellEntry const* voidSpell = sSpellStore.LookupEntry(pSpellId))
+                                bp0 = int32(pet->GetMaxHealth() * (voidSpell->EffectBasePoints[0]+1) / 100);
+                            break;
+                        }
+                        default: break;
+                    }
+
+                    if(pSpellId)
+                        bp0 ? pet->CastCustomSpell(pet, pSpellId, &bp0, NULL, NULL, true) : pet->CastSpell(pet, pSpellId, true);
                     return;
                 }
             }

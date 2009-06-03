@@ -171,6 +171,10 @@ SpellSpecific GetSpellSpecific(uint32 spellId)
             if (spellInfo->Dispel == DISPEL_POISON)
                 return SPELL_STING;
 
+            // only one spell in game (Dragonhawk's dodge bonus) has this.
+            if (spellInfo->SpellFamilyFlags2 == 0x2000)
+                return SPELL_DRAGONHAWK_DODGE;
+
             // only hunter aspects have this (but not all aspects in hunter family)
             if( spellInfo->SpellFamilyFlags & UI64LIT(0x0044000000380000) || spellInfo->SpellFamilyFlags2 & 0x00003010)
                 return SPELL_ASPECT;

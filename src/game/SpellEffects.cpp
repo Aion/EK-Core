@@ -2459,6 +2459,19 @@ void Spell::EffectApplyAura(uint32 i)
     if(!unitTarget)
         return;
 
+    //prevent cheating with some bugged questitems
+    if( (m_spellInfo->Id==52252 || m_spellInfo->Id==52487 || m_spellInfo->Id==52389 || m_spellInfo->Id==53102)
+        && unitTarget->GetTypeId()==TYPEID_PLAYER)
+        return;
+    if(m_spellInfo->Id==52252 && unitTarget->GetEntry() != 28750) //Scepter of Suggestion - Blighted Geist
+        return;
+    if(m_spellInfo->Id==52487 && unitTarget->GetEntry() != 28843) //Scepter of Command - Bloated Abomination
+        return;
+    if(m_spellInfo->Id==52389 && unitTarget->GetEntry() != 28802) //Scepter of Empowerment - Servant of Drakuru
+        return;
+    if(m_spellInfo->Id==53102 && unitTarget->GetEntry() != 28931) //Scepter of Domination - Blightblood Troll
+        return;
+
     // ghost spell check, allow apply any auras at player loading in ghost mode (will be cleanup after load)
     if( !unitTarget->isAlive() && m_spellInfo->Id != 20584 && m_spellInfo->Id != 8326 &&
         (unitTarget->GetTypeId()!=TYPEID_PLAYER || !((Player*)unitTarget)->GetSession()->PlayerLoading()) )

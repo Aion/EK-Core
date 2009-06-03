@@ -499,6 +499,7 @@ class ChatHandler
 
         // if args have single value then it return in arg2 and arg1 == NULL
         void      extractOptFirstArg(char* args, char** arg1, char** arg2);
+        char*     extractQuotedArg(char* args);
 
         uint32    extractSpellIdFromLink(char* text);
         uint64    extractGuidFromLink(char* text);
@@ -520,6 +521,7 @@ class ChatHandler
         bool HandleBanInfoHelper(uint32 accountid, char const* accountname);
         bool HandleUnBanHelper(BanMode mode,char const* args);
         void HandleCharacterLevel(Player* player, uint64 player_guid, uint32 oldlevel, uint32 newlevel);
+        void HandleLearnSkillRecipesHelper(Player* player,uint32 skill_id);
 
         void SetSentErrorMessage(bool val){ sentErrorMessage = val;};
     private:

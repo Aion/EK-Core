@@ -1688,6 +1688,38 @@ void Unit::CalcAbsorbResist(Unit *pVictim,SpellSchoolMask schoolMask, DamageEffe
                         RemainingDamage -= RemainingDamage * currentAbsorb / 100;
                     continue;
                 }
+                // Rapture
+                if (spellProto->SpellFamilyFlags & 0x1 || spellProto->SpellFamilyFlags2 & 0x400)
+                {
+                    Unit* caster = (*i)->GetCaster();
+                    if (!caster)
+                        break;
+
+                    AuraList const& vOverRideCS = caster->GetAurasByType(SPELL_AURA_OVERRIDE_CLASS_SCRIPTS);
+                    for(AuraList::const_iterator k = vOverRideCS.begin(); k != vOverRideCS.end(); ++k)
+                    {
+                        switch((*k)->GetModifier()->m_miscvalue)
+                        {
+                            case 7552:                          // Rank 5
+                            case 7553:                          // Rank 4
+                            case 7554:              // Rank 3
+                            case 7555:              // Rank 2
+                            case 7556:              // Rank 1
+                            {
+                                int32 manaRestore = RemainingDamage >= currentAbsorb ? currentAbsorb : RemainingDamage;
+                                //max possible amount
+                                int32 max = caster->GetMaxPower(POWER_MANA) * (*k)->GetModifier()->m_amount/1000;
+                                //amount
+                                manaRestore *= float((*k)->GetModifier()->m_amount)/25 * 0.000004f *caster->GetMaxPower(POWER_MANA);
+                                manaRestore = manaRestore > max ? max : manaRestore;
+
+                                caster->CastCustomSpell(caster,47755,&manaRestore,NULL,NULL,true,NULL,(*k));
+                            }
+                            break;
+                            default: break;
+                        }
+                    }
+                }
                 // Reflective Shield (Lady Malande boss)
                 if (spellProto->Id == 41475)
                 {
@@ -5163,6 +5195,17 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
                 basepoints0 = damage * triggerAmount/100;
                 triggered_spell_id = 47753;
                 break;
+            }
+            // Rapture Proc (from heal)
+            if( dummySpell->SpellIconID == 2894 )
+            {
+                //max possible amount
+                int32 max = GetMaxPower(POWER_MANA) * 5*triggerAmount/1000;
+                //amount
+                basepoints0 = int32(float(triggerAmount)/5 * 0.000004f * damage*GetMaxPower(POWER_MANA));
+                basepoints0 = basepoints0 > max ? max : basepoints0;
+
+                triggered_spell_id = 47755;
             }
             switch(dummySpell->Id)
             {

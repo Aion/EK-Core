@@ -1789,7 +1789,7 @@ void Spell::EffectDummy(uint32 i)
             break;
         case SPELLFAMILY_DEATHKNIGHT:
             //Scourge Strike
-            if(m_spellInfo->SpellFamilyFlags & 0x800000000000000LL)
+            if(m_spellInfo->SpellFamilyFlags & UI64LIT(0x800000000000000))
             {
                 // I think that receiveing 2 AuraLists that contain only auras that belong to the type that we need
                 // and then iterating through them is faster than iterating through AuraList with all available auras.

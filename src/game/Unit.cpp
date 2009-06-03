@@ -284,7 +284,7 @@ void Unit::SendMonsterMove(float NewPosX, float NewPosY, float NewPosZ, uint8 ty
             break;
     }
 
-    data << uint32(MovementFlags);
+    data << uint32(GetTypeId() == TYPEID_PLAYER ? MOVEMENTFLAG_WALK_MODE : MovementFlags);
 
     data << uint32(Time);                                   // Time in between points
     data << uint32(1);                                      // 1 single waypoint

@@ -97,7 +97,8 @@ enum SpellSpecific
     SPELL_GUARDIAN_ELIXIR   = 15,
     SPELL_FLASK_ELIXIR      = 16,
     SPELL_PRESENCE          = 17,
-    SPELL_DRAGONHAWK_DODGE  = 18
+    SPELL_MAGE_BOMB         = 18,
+    SPELL_DRAGONHAWK_DODGE  = 19
 };
 
 SpellSpecific GetSpellSpecific(uint32 spellId);

@@ -5113,6 +5113,21 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
                 mod->m_amount-=damage;
                 return true;
             }
+            // Pandemic
+            if (dummySpell->SpellIconID == 2042)
+            {
+                Unit *caster = triggeredByAura->GetCaster();
+
+                if (!procSpell || !caster)
+                    return false;
+
+                float crit_chance = caster->GetFloatValue(PLAYER_SPELL_CRIT_PERCENTAGE1 + GetFirstSchoolInMask(GetSpellSchoolMask(procSpell)));
+                if (!roll_chance_f(crit_chance))
+                    return false;
+                basepoints0 = damage * triggerAmount / 100;
+                triggered_spell_id = 58691;
+                break;
+            }
             // Fel Synergy
             if (dummySpell->SpellIconID == 3222)
             {

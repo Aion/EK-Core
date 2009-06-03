@@ -1770,6 +1770,12 @@ void Spell::EffectDummy(uint32 i)
                 m_caster->CastSpell(unitTarget, 52025, true);
                 return;
             }
+            // Poison Cleansing Totem
+            if((m_spellInfo->SpellFamilyFlags & UI64LIT(0x0000000004000000)) && m_spellInfo->SpellIconID==1679)
+            {
+                m_caster->CastSpell(unitTarget, 51975, true);
+                return;
+            }
             // Healing Stream Totem
             if(m_spellInfo->SpellFamilyFlags & UI64LIT(0x0000000000002000))
             {

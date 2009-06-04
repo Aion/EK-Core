@@ -5704,6 +5704,15 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
                     triggered_spell_id = 31803;
                     break;
                 }
+                // Seal of Corruption
+                case 53736:
+                {
+                    if(effIndex != 0)
+                        return false;
+
+                    triggered_spell_id = 53742;
+                    break;
+                }
                 // Seal of Corruption (damage calc on apply aura)
                 case 53736:
                 {

@@ -1294,7 +1294,15 @@ void Player::Update( uint32 p_time )
         RegenerateAll();
     }
 
-    if (m_deathState == JUST_DIED)
+    // EK-Change 2: Dont kill player when died on different zones on maps to prevent death on duellplaces, psycity & Gurubashi-Arena
+    uint32 map = GetMapId();
+    uint32 zone = GetZoneId();
+	
+    if ((m_deathState == JUST_DIED && map == 0 && zone == 33) || (m_deathState == JUST_DIED && map == 0 && zone == 139) || (m_deathState == JUST_DIED && map == 1 && zone == 1377) || (m_deathState == JUST_DIED && map == 1 && zone == 440))
+    {
+        ResurrectPlayer(0.5f);
+    }
+    else if (m_deathState == JUST_DIED)
     {
         KillPlayer();
     }
@@ -6091,21 +6099,28 @@ void Player::UpdateArea(uint32 newArea)
     //EK-Change Porte Spieler zurück zur Psy-City, sollten sie das Gebiet verlassen!
     uint32 map = GetMapId();
     uint32 zone = GetZoneId();
-
-    if(!isGameMaster() && map == 0 && zone == 139 && newArea !=2266) // Psy-City
+    if(!isGameMaster && !GetTransport())
     {
-        if(!GetTransport()) // Nicht während eines Transports
+        if(map == 0 && zone == 139 && newArea != 2266) // Psy-City
         {
             ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
-            TeleportTo(m_homebindMapId, m_homebindX, m_homebindY, m_homebindZ, GetOrientation());
+            TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842);
         }
-    }
-	if(!isGameMaster() && map == 1 && zone == 1377 && newArea !=2477) // Psy-City
-    {
-        if(!GetTransport()) // Nicht während eines Transports
+        else if(map == 1 && zone == 1377 && newArea !=2477) // Allianz-Duellplatz
         {
             ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
-            TeleportTo(m_homebindMapId, m_homebindX, m_homebindY, m_homebindZ, GetOrientation());
+            TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842);
+        }
+        else if(map == 1 && zone == 440 && newArea != 2317) // Horde-Duellplatz
+        {
+            ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
+            TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842);
+        }
+	    else if(map == 0 && zone == 33 && (newArea !=1741 || newArea != 2177)) // Gurubashi-Arena
+        {
+            ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
+            TeleportTo(0, -13243.297852, 198.544540, 30.942028, 1.142342);
+        
         }
     }
 

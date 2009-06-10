@@ -6106,7 +6106,7 @@ void Player::UpdateArea(uint32 newArea)
 
 	//EK-Change Porte Spieler zurück zur Psy-City, sollten sie das Gebiet verlassen!
     uint32 map = GetMapId();
-    uint32 area = GetAreaId();
+    //uint32 area = GetAreaId();
 
     if(!isGameMaster() && !GetTransport())
     {

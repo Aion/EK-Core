@@ -6110,11 +6110,11 @@ void Player::UpdateArea(uint32 newArea)
 
     if(!isGameMaster() && !GetTransport())
     {
-        if(map == 0 && area != 2266 && area !=1741 && area != 2177) // Psy-City && Gurubashi
+        if(map == 0 && GetAreaId() != 2266 && GetAreaId() != 1741 && GetAreaId() != 2177) // Psy-City && Gurubashi
         {
             backtopsycity();
         }
-        else if(map == 1 && area != 2317 && area != 2477) // Duellplätze
+        else if(map == 1 && GetAreaId() != 2317 && GetAreaId() != 2477) // Duellplätze
         {
             backtopsycity();
         }

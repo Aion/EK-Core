@@ -6104,6 +6104,34 @@ void Player::UpdateArea(uint32 newArea)
     // so apply them accordingly
     m_areaUpdateId    = newArea;
 
+	//EK-Change Porte Spieler zurück zur Psy-City, sollten sie das Gebiet verlassen!
+    uint32 map = GetMapId();
+    uint32 zone = GetZoneId();
+
+    if(!isGameMaster && !GetTransport())
+    {
+        if(map == 0 && zone == 139 && newArea != 2266) // Psy-City
+        {
+            ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
+	        TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842); //Teleportiere zur Psy-City
+        }
+        else if(map == 1 && zone != 1377 && newArea !=2477) // Allianz-Duellplatz
+        {
+            ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
+	        TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842); //Teleportiere zur Psy-City
+        }
+        else if(map == 1 && zone != 440 && newArea != 2317) // Horde-Duellplatz
+        {
+            ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
+	        TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842); //Teleportiere zur Psy-City
+        }
+        else if(map == 0 && zone == 33 && (newArea !=1741 || newArea != 2177)) // Gurubashi-Arena
+        {
+            ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
+	        TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842); //Teleportiere zur Psy-City
+        }
+    }
+
     AreaTableEntry const* area = GetAreaEntryByAreaID(newArea);
 
     if(area && (area->flags & AREA_FLAG_ARENA))
@@ -6132,30 +6160,6 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
 
     // zone changed, so area changed as well, update it
     UpdateArea(newArea);
-
-    //EK-Change Porte Spieler zurück zur Psy-City, sollten sie das Gebiet verlassen!
-    uint32 map = GetMapId();
-    uint32 zone = GetZoneId();
-
-    if(!isGameMaster && !GetTransport())
-    {
-        if(map == 0 && zone == 139 && newArea != 2266) // Psy-City
-        {
-            backtopsycity();
-        }
-        else if(map == 1 && zone != 1377 && newArea !=2477) // Allianz-Duellplatz
-        {
-            backtopsycity();
-        }
-        else if(map == 1 && zone != 440 && newArea != 2317) // Horde-Duellplatz
-        {
-            backtopsycity();
-        }
-        else if(map == 0 && zone == 33 && (newArea !=1741 || newArea != 2177)) // Gurubashi-Arena
-        {
-            backtopsycity();
-        }
-    }
 
     AreaTableEntry const* zone = GetAreaEntryByAreaID(newZone);
     if(!zone)
@@ -20094,10 +20098,4 @@ bool Player::canSeeSpellClickOn(Creature const *c) const
             return true;
     }
     return false;
-}
-
-void backtopsycity() //EK-Change 3
-{
-	ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
-	TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842); //Teleportiere zur Psy-City
 }

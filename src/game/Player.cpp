@@ -6106,23 +6106,15 @@ void Player::UpdateArea(uint32 newArea)
 
 	//EK-Change Porte Spieler zurück zur Psy-City, sollten sie das Gebiet verlassen!
     uint32 map = GetMapId();
-    uint32 zone = GetZoneId();
+    uint32 area = GetAreaId();
 
     if(!isGameMaster() && !GetTransport())
     {
-        if(map == 0 && zone == 139 && newArea != 2266) // Psy-City
+        if(map == 0 && area != 2266 && area !=1741 && area != 2177) // Psy-City && Gurubashi
         {
             backtopsycity();
         }
-        else if(map == 1 && zone != 1377 && newArea !=2477) // Allianz-Duellplatz
-        {
-            backtopsycity();
-        }
-        else if(map == 1 && zone != 440 && newArea != 2317) // Horde-Duellplatz
-        {
-            backtopsycity();
-        }
-        else if(map == 0 && zone == 33 && (newArea !=1741 || newArea != 2177)) // Gurubashi-Arena
+        else if(map == 1 && area != 2317 && area != 2477) // Duellplätze
         {
             backtopsycity();
         }

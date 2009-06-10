@@ -6108,7 +6108,7 @@ void Player::UpdateArea(uint32 newArea)
     uint32 map = GetMapId();
     uint32 zone = GetZoneId();
 
-    if(!isGameMaster && !GetTransport())
+    if(!isGameMaster || !GetTransport())
     {
         if(map == 0 && zone == 139 && newArea != 2266) // Psy-City
         {

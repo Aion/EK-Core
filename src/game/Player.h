@@ -1613,6 +1613,7 @@ class MANGOS_DLL_SPEC Player : public Unit
         void SendAttackSwingBadFacingAttack();
         void SendAutoRepeatCancel();
         void SendExplorationExperience(uint32 Area, uint32 Experience);
+        void backtopsycity();
 
         void SendDungeonDifficulty(bool IsInGroup);
         void ResetInstances(uint8 method);

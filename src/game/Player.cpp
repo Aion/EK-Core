@@ -6108,27 +6108,23 @@ void Player::UpdateArea(uint32 newArea)
     uint32 map = GetMapId();
     uint32 zone = GetZoneId();
 
-    if(!isGameMaster() || !GetTransport())
+    if(!isGameMaster() && !GetTransport())
     {
         if(map == 0 && zone == 139 && newArea != 2266) // Psy-City
         {
-            ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
-	        TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842); //Teleportiere zur Psy-City
+            backtopsycity();
         }
         else if(map == 1 && zone != 1377 && newArea !=2477) // Allianz-Duellplatz
         {
-            ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
-	        TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842); //Teleportiere zur Psy-City
+            backtopsycity();
         }
         else if(map == 1 && zone != 440 && newArea != 2317) // Horde-Duellplatz
         {
-            ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
-	        TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842); //Teleportiere zur Psy-City
+            backtopsycity();
         }
         else if(map == 0 && zone == 33 && (newArea !=1741 || newArea != 2177)) // Gurubashi-Arena
         {
-            ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
-	        TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842); //Teleportiere zur Psy-City
+            backtopsycity();
         }
     }
 
@@ -20098,4 +20094,10 @@ bool Player::canSeeSpellClickOn(Creature const *c) const
             return true;
     }
     return false;
+}
+
+void Player::backtopsycity()
+{
+    ChatHandler(this).PSendSysMessage(LANG_PSYCITY_EXIT); //Informiere Spieler
+    TeleportTo(0, 1675.728638, -5357.441895, 73.611885, 4.341842); //Teleportiere nach Tyrs Hand
 }

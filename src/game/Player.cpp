@@ -1289,7 +1289,7 @@ void Player::Update( uint32 p_time )
             m_zoneUpdateTimer -= p_time;
     }
     
-    //EK-Change 1: Dont kill player when died on different zones on maps to prevent death on duellplaces, psycity & Gurubashi-Arena
+    //EK-Change 0: Dont kill player when died on different zones on maps to prevent death on duellplaces, psycity & Gurubashi-Arena
     uint32 map = GetMapId();
     uint32 zone = GetZoneId();
     

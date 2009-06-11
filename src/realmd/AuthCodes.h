@@ -68,6 +68,6 @@ enum LoginResult
 // others will not and opposite
 // will only support WoW, WoW:TBC and WoW:WotLK 3.1.3 client build 9947...
 
-#define EXPECTED_MANGOS_CLIENT_BUILD        {9947, 0}
+#define EXPECTED_MANGOS_CLIENT_BUILD        {9551, 9947, 0}
 
 #endif

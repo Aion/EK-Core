@@ -119,6 +119,7 @@ ObjectMgr::ObjectMgr()
     m_hiPetNumber       = 1;
     m_ItemTextId        = 1;
     m_mailid            = 1;
+    m_equipmentSetGuid  = 1;
     m_guildId           = 1;
     m_arenaTeamId       = 1;
     m_auctionid         = 1;
@@ -813,9 +814,6 @@ void ObjectMgr::LoadEquipmentTemplates()
     }
     sLog.outString( ">> Loaded %u equipment template", sEquipmentStorage.RecordCount );
     sLog.outString();
-
-    // Creature items can be not listed in item_template
-    //sItemStore.Clear(); -- so used in spell casting
 }
 
 CreatureModelInfo const* ObjectMgr::GetCreatureModelInfo(uint32 modelid)
@@ -1690,11 +1688,17 @@ void ObjectMgr::LoadItemPrototypes()
         {
             for (int j = 0; j < MAX_ITEM_PROTO_SPELLS; ++j)
             {
-                if(proto->Spells[j].SpellTrigger >= MAX_ITEM_SPELLTRIGGER || proto->Spells[j].SpellTrigger == ITEM_SPELLTRIGGER_LEARN_SPELL_ID)
+                if (proto->Spells[j].SpellTrigger >= MAX_ITEM_SPELLTRIGGER || proto->Spells[j].SpellTrigger == ITEM_SPELLTRIGGER_LEARN_SPELL_ID)
                 {
                     sLog.outErrorDb("Item (Entry: %u) has wrong item spell trigger value in spelltrigger_%d (%u)",i,j+1,proto->Spells[j].SpellTrigger);
                     const_cast<ItemPrototype*>(proto)->Spells[j].SpellId = 0;
                     const_cast<ItemPrototype*>(proto)->Spells[j].SpellTrigger = ITEM_SPELLTRIGGER_ON_USE;
+                }
+                // on hit can be sued only at weapon
+                else if (proto->Spells[j].SpellTrigger == ITEM_SPELLTRIGGER_CHANCE_ON_HIT)
+                {
+                    if(proto->Class != ITEM_CLASS_WEAPON)
+                        sLog.outErrorDb("Item (Entry: %u) isn't weapon (Class: %u) but has on hit spelltrigger_%d (%u), it will not triggered.",i,proto->Class,j+1,proto->Spells[j].SpellTrigger);
                 }
 
                 if(proto->Spells[j].SpellId)
@@ -1810,6 +1814,111 @@ void ObjectMgr::LoadItemPrototypes()
             const_cast<ItemPrototype*>(proto)->ItemLimitCategory = 0;
         }
     }
+}
+
+void ObjectMgr::LoadItemRequiredTarget()
+{
+    m_ItemRequiredTarget.clear();                           // needed for reload case
+
+    uint32 count = 0;
+
+    QueryResult *result = WorldDatabase.Query("SELECT entry,type,targetEntry FROM item_required_target");
+
+    if (!result)
+    {
+        barGoLink bar(1);
+
+        bar.step();
+
+        sLog.outString();
+        sLog.outErrorDb(">> Loaded 0 ItemRequiredTarget. DB table `item_required_target` is empty.");
+        return;
+    }
+
+    barGoLink bar(result->GetRowCount());
+
+    do
+    {
+        Field *fields = result->Fetch();
+        bar.step();
+
+        uint32 uiItemId      = fields[0].GetUInt32();
+        uint32 uiType        = fields[1].GetUInt32();
+        uint32 uiTargetEntry = fields[2].GetUInt32();
+
+        ItemPrototype const* pItemProto = sItemStorage.LookupEntry<ItemPrototype>(uiItemId);
+
+        if (!pItemProto)
+        {
+            sLog.outErrorDb("Table `item_required_target`: Entry %u listed for TargetEntry %u does not exist in `item_template`.",uiItemId,uiTargetEntry);
+            continue;
+        }
+
+        bool bIsItemSpellValid = false;
+
+        for(int i = 0; i < MAX_ITEM_PROTO_SPELLS; ++i)
+        {
+            if (SpellEntry const* pSpellInfo = sSpellStore.LookupEntry(pItemProto->Spells[i].SpellId))
+            {
+                if (pItemProto->Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_ON_USE ||
+                    pItemProto->Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_ON_NO_DELAY_USE)
+                {
+                    SpellScriptTarget::const_iterator lower = spellmgr.GetBeginSpellScriptTarget(pSpellInfo->Id);
+                    SpellScriptTarget::const_iterator upper = spellmgr.GetEndSpellScriptTarget(pSpellInfo->Id);
+
+                    if (lower != upper)
+                        break;
+
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        if (pSpellInfo->EffectImplicitTargetA[j] == TARGET_CHAIN_DAMAGE ||
+                            pSpellInfo->EffectImplicitTargetB[j] == TARGET_CHAIN_DAMAGE ||
+                            pSpellInfo->EffectImplicitTargetA[j] == TARGET_DUELVSPLAYER ||
+                            pSpellInfo->EffectImplicitTargetB[j] == TARGET_DUELVSPLAYER)
+                        {
+                            bIsItemSpellValid = true;
+                            break;
+                        }
+                    }
+                    if (bIsItemSpellValid)
+                        break;
+                }
+            }
+        }
+
+        if (!bIsItemSpellValid)
+        {
+            sLog.outErrorDb("Table `item_required_target`: Spell used by item %u does not have implicit target TARGET_CHAIN_DAMAGE(6), TARGET_DUELVSPLAYER(25), already listed in `spell_script_target` or doesn't have item spelltrigger.",uiItemId);
+            continue;
+        }
+
+        if (!uiType || uiType > MAX_ITEM_REQ_TARGET_TYPE)
+        {
+            sLog.outErrorDb("Table `item_required_target`: Type %u for TargetEntry %u is incorrect.",uiType,uiTargetEntry);
+            continue;
+        }
+
+        if (!uiTargetEntry)
+        {
+            sLog.outErrorDb("Table `item_required_target`: TargetEntry == 0 for Type (%u).",uiType);
+            continue;
+        }
+
+        if (!sCreatureStorage.LookupEntry<CreatureInfo>(uiTargetEntry))
+        {
+            sLog.outErrorDb("Table `item_required_target`: creature template entry %u does not exist.",uiTargetEntry);
+            continue;
+        }
+
+        m_ItemRequiredTarget.insert(ItemRequiredTargetMap::value_type(uiItemId,ItemRequiredTarget(ItemRequiredTargetType(uiType),uiTargetEntry)));
+
+        ++count;
+    } while (result->NextRow());
+
+    delete result;
+
+    sLog.outString();
+    sLog.outString(">> Loaded %u Item required targets", count);
 }
 
 void ObjectMgr::LoadPetLevelInfo()
@@ -5168,6 +5277,13 @@ void ObjectMgr::SetHighestGuids()
         delete result;
     }
 
+    result = CharacterDatabase.Query("SELECT MAX(setguid) FROM character_equipmentsets");
+    if (result)
+    {
+        m_equipmentSetGuid = (*result)[0].GetUInt64()+1;
+        delete result;
+    }
+
     result = CharacterDatabase.Query( "SELECT MAX(guildid) FROM guild" );
     if (result)
     {
@@ -5194,6 +5310,16 @@ uint32 ObjectMgr::GenerateAuctionID()
         World::StopNow(ERROR_EXIT_CODE);
     }
     return m_auctionid++;
+}
+
+uint64 ObjectMgr::GenerateEquipmentSetGuid()
+{
+    if(m_equipmentSetGuid>=0xFFFFFFFFFFFFFFFEll)
+    {
+        sLog.outError("EquipmentSet guid overflow!! Can't continue, shutting down server. ");
+        World::StopNow(ERROR_EXIT_CODE);
+    }
+    return m_equipmentSetGuid++;
 }
 
 uint32 ObjectMgr::GenerateGuildId()
